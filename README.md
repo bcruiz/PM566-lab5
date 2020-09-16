@@ -152,16 +152,44 @@ met[1:5, c('USAFID', 'WBAN', 'STATE')]
     ## 4: 690150 93121    CA
     ## 5: 690150 93121    CA
 
-``` r
-#subset to double check
-```
-
 ## Question 1: Representative station for the US
 
 What is the median station in terms of temperature, wind speed, and
 atmospheric pressure? Look for the three weather stations that best
 represent continental US using the `quantile()` function. Do these three
 coincide?
+
+``` r
+met_stations <- met[, .(wind.sp = mean(wind.sp, na.rm = TRUE),
+                        atm.press = mean(atm.press, na.rm = TRUE),
+                        temp = mean(temp, na.rm = TRUE), by = USAFID)]
+#Computing the Median
+met_stations[, temp50 := quantile(temp, probs = 0.5, na.rm = TRUE)]
+met_stations[, atmp50 := quantile(atm.press, probs = 0.5, na.rm = TRUE)]
+met_stations[, windsp50 := quantile(wind.sp, probs = 0.5, na.rm = TRUE)]
+
+#applying a filter
+met_stations[which.min(abs(temp - temp50))]
+```
+
+    ##     wind.sp atm.press     temp     by   temp50   atmp50 windsp50
+    ## 1: 2.459166  1014.164 23.59054 690150 23.59054 1014.164 2.459166
+
+``` r
+met_stations[which.min(abs(atm.press - atmp50))]
+```
+
+    ##     wind.sp atm.press     temp     by   temp50   atmp50 windsp50
+    ## 1: 2.459166  1014.164 23.59054 690150 23.59054 1014.164 2.459166
+
+``` r
+met_stations[which.min(abs(wind.sp - windsp50))]
+```
+
+    ##     wind.sp atm.press     temp     by   temp50   atmp50 windsp50
+    ## 1: 2.459166  1014.164 23.59054 690150 23.59054 1014.164 2.459166
+
+No these three do not coincide.
 
 Knit the document, commit your changes, and Save it on GitHub. Don’t
 forget to add `README.md` to the tree, the first time you render it.
