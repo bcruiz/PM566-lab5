@@ -1,6 +1,8 @@
 ---
 title: "Lab 05 - Data Wrangling"
-output: html_document
+author: "Brandyn Ruiz"
+date: "9/16/2020"
+output: github_document
 ---
 
 # Learning goals
